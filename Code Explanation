@@ -1,0 +1,145 @@
+# Sudoku-Solver
+Sudoku Solver
+Read Me for Sudoku Solver
+
+Explanation of how the code works
+
+We import the numpy module, as the predefined functions within the module make creating
+this program more efficient.
+
+We create an unsolved sudoku grid using a nested list to visualize the program, and define
+it under the variable 'grid'.
+
+The np.matrix function allows the grid to be visualized in 2d when the program is ran.
+
+The function 'possible' is used do define all possible numbers that could be placed
+in a given individual square.
+
+We created 3 loops within this function to answer three questions. These loops iterate 
+through the rows, columns and squares of the sudoku puzzle, to check if a number is possible
+within the parameters of the game. The loops were made to answer the following questions.
+
+1. Is the number appearing in the given row?
+2. Is the number appearing in the given column?
+3. Is the number appearing in the given square?
+
+Global is a function imported from numpy and is used within the possible function
+so the grid variable can be analyzed within the function.
+
+The first for loop iterates through the range(0,9), since that is how many rows are in a 
+sudoku puzzle. The range(0,9) prints the numbers 0-8, with the first row being 0 and the 9th
+row being 8.
+
+Within this for loop, we use an if statement that sees if there are any numbers within a row
+that is equal to the number the system is iterating through. If there is, we wanted to return
+that statement as false so we know that that number is not a possible solution.
+
+If the that loop passes, then the possible function will continue to the next for loop to 
+iterate through columns.
+
+We do the same thing within the next for loop, but instead of rows, we are iterating through
+the columns. Again, if the loop passes, then the possible functio will continue to the next for
+loop to iterate through specific boxes.
+
+Within a sudoku grid there is one massive grid, nine boxes within this grid and nine squares
+within each box. For this iteration of the 'possible' function, we want to check if a number
+is within a specific box, but we need to get the program to understand what a box is, rather
+than the program iterating through any 3x3 section of the grid.
+
+Before we can begin the next for loop, we have to define two variables, being 'x0' and 'y0'.
+x0 will be used for the columns, as columns change through the x-axis and y0 will be used for 
+the words, as rows change through the y-axis. This isn't actually necessary for the naming of
+the variables, but just gives reasoning as to why I named them such.
+
+Let us say that box 1 is the box in the top left corner of the grid. The rows and columns used
+in that box would be the first three rows and the first three columns, for a total of nine 
+individual squares within that box. For box 2, which we can say is the top middle box, would use
+the first 3 rows, but the 4th, 5th, and 6th columns and so on for each box up to 9 boxes total.
+So how can we get the program to understand the parameters for a specific box. The easiest way
+would be to assign variables that distinguish the boxes through grouping the columns and rows.
+
+The way these variables are determined are through the equations (column//3)*3 and (row//3)*3
+respectively. The reason we use these equations is kind of tricky to explain, but I will try
+my best.
+
+The // operator uses floor division. Pretty much it divides a number than rounds it down.
+
+For example: 0//3 = 0, 1//3 = 0, 2//3 = 0, 3//3 = 1 and so on.
+
+We use this operator to divide the column or row number by 3, which in turn will group the 
+rows/columns into groups of three by default, as in the example above can show that 3 numbers
+//3 will equal the same thing. The first three rows or numbers 0-2 will = 0, the next three rows
+3-5 will = 1, and the last three rows 6-8 will = 2 and the same goes for the columns. For 
+simplicity reasons, let us call these row groupings sections and column groupings segments.
+
+[Visualization of box groupings determined through floor division]
+				Seg. 0 Seg. 1 Seg. 2 
+(0,0)(0,1)(0,2)		Sec. 0	  x	 x	x
+(1,0)(1,1)(1,2)		Sec. 1	  x	 x	x
+(2,0)(2,1)(2,2)		Sec. 2	  x	 x	x
+
+So now we have the groupings of the boxes within the grid, but how do we get the program to
+know where the starting point of each box is? In other words, we want the program to start
+iterating section 0 from row 0, section 1 from row 3, and section 2 from row 6. Same for the
+columns/segment iteration. To do this, we multiple the equation (column//3) or (row//3) by 3.
+Within the parameters we created, only 3 products can be the result, being 0, 3, and 6, which
+are also the rows/columns we want iteration of these squares to start on.
+
+For the first loop we use in this portion of the 'possible' function, we loop through range(0,3).
+We do this because, as defined in the earlier explanation of the variables, each box has 3 rows.
+
+The second loop is the same as the one it is within, but rather than rows it is for the columns.
+
+The if statement has 2 statements prior to the operator, with those statements being [y0+i] and
+[x0 + j]. We group i with y0 and j with x0 because the first loop, which utilizes variable i, is
+being used for rows and j, second loop, for columns.
+
+The reason we add y0 and i is because y0 gives us the starting position of the box and i is 
+iterating through a range between 0-2, which means adding y0 to i as the loop iterates will allow
+the program to move to a different row of the box. Same goes for x0 and j variable but for 
+columns.
+
+Finally if the number within that point of the box is found (== number) we want the program
+to return it as false, as it is not a possible solution.
+
+But if the number passes through all these checks, then we want the program to return the option 
+as true, which is placed at the end of the 'possible' function.
+
+Now we need Python to loop through this grid AND fill in the numbers that return as true.
+Also how sudoku works, is that even if a number is correct at a specific moment, it can still be
+incorrect in order to solve the puzzle as a whole. This is an issue, as how the program is 
+running currently through the possible function, python will just continue to the next field
+unknowing of the error made.
+
+How the program currently works is that python checks if a number fits a given square through
+the possible function and will compute the FIRST possible answer, even if incorrect to solve
+the entirety of the puzzle. For example, let's say that 2 and 7 work for any given square.
+Python will choose 2 for that square, as it is iterated through before 7, but 7 is the right
+answer. Let's say that later in that row in a given square, no numbers left for Python to 
+iterate through works, since 2 was supposed to go in that square, leading for the program to 
+fail. If we integrate a backtracking algorithim, it will enable Python to literally backtrack
+into previous squares it has solved, and look for other possible solutions for that square, 
+to enable a solution for the square it previously failed at.
+
+Now, we are going to create another function and call it 'solve'. As the name suggests, it will solve the
+sudoku puzzle.
+
+In this function, we use global grid again and create two for loops, one for the row and one for the columns.
+
+First we use an if statement, with this statement checking to see if the current square the program is on
+is an empty cell or not (for this program, an empty cell is 0). If that part of the grid is empty, than
+we integrate another for loop, this for loop iterating through each number between range(1,10) or 1-9.
+
+Now within that loop we put another if statement, which utilizes or possible function that we created earlier.
+If the number is possible, we put that number within that square by assigning it to the grid and we continue
+the function 'solve'. If the program is stuck however, like in the example listed above, we want to reset
+the number in the box to 0, to allow the program to reiterate through the square.
+
+From there, we want to return the function back to the 'number' for loop, to iterate through the next squares.
+
+When the puzzle has been solved however, we want to print the updated solved grid and if there are more
+solutions to given puzzle, we want to let the user now through a message.
+
+
+
+
